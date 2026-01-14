@@ -548,7 +548,7 @@ protein_names <- PWAS_res |>
 
 -   The E6 proteins `->` E6 MRI for WMH included data from N=`{r} print(max(PWAS_res$wmh_6_nobs, na.rm=TRUE))` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/WMH_E6_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/WMH_E6_PWAS.csv)
 
 -   A total of N=`{r} PWAS_res |> dplyr::filter(wmh_6_fdr < .05 )|> nrow()` exam 6 proteins were significantly associated with WMH at an FDR corrected `P<.05`.
 
@@ -556,7 +556,7 @@ protein_names <- PWAS_res |>
 
 -   The E1 proteins `->` E6 MRI for WMH included data from N=`{r} print(max(PWAS_res$wmh_1_nobs, na.rm=TRUE))` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/WMH_E1_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/WMH_E1_PWAS.csv)
 
 -   A total of N=`{r} PWAS_res |> dplyr::filter(wmh_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with WMH at an FDR corrected `P<.05`.
 
@@ -573,7 +573,7 @@ protein_names <- PWAS_res |>
 
 -   The E6 proteins `->` E6 MRI for EPVS included data from N=`{r} print(max(PWAS_res$epvs_6_nobs, na.rm=TRUE))` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/EPVS_E6_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_E6_PWAS.csv)
 
 -   A total of N=`{r} PWAS_res |> dplyr::filter(epvs_6_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS at an FDR corrected `P<.05`
 
@@ -581,7 +581,7 @@ protein_names <- PWAS_res |>
 
 -   The E1 proteins `->` E6 MRI for EPVS included data from N=`{r} print(max(PWAS_res$epvs_1_nobs, na.rm=TRUE))` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/EPVS_E1_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_E1_PWAS.csv)
 
 -   A total of N=`{r} PWAS_res |> dplyr::filter(epvs_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS at an FDR corrected `P<.05`
 
@@ -598,7 +598,7 @@ protein_names <- PWAS_res |>
 
 -   The E6 proteins `->` E6 MRI for FA included data from N=`{r} print(max(PWAS_res$fa_6_nobs, na.rm=TRUE))` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/FA_E6_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/FA_E6_PWAS.csv)
 
 -   A total of N=`{r} PWAS_res |> dplyr::filter(fa_6_fdr < .05 )|> nrow()` exam 6 proteins were significantly associated with FA at an FDR corrected `P<.05` (see @tbl-fa-E6-sig and @fig-fa-E6).
 
@@ -667,7 +667,7 @@ rm(full_res)
 
 -   The E1 proteins `->` E6 MRI for FA included data from N=`{r} print(max(PWAS_res$fa_1_nobs, na.rm=TRUE))` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/FA_E1_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/FA_E1_PWAS.csv)
 
 -   A total of N=`{r} PWAS_res |> dplyr::filter(fa_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with FA at an FDR corrected `P<.05` (see @tbl-fa-E1-sig and @fig-fa-E1 in Appendix 1).
 
@@ -751,7 +751,7 @@ rm(full_res)
 
 -   The E6 proteins `->` E6 MRI for MB included data from N= `{r} print(max(PWAS_res$mb_present_6_nobs, na.rm=TRUE))` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/MB_E6_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/MB_E6_PWAS.csv)
 
 -   A total of N=`{r} PWAS_res |> dplyr::filter(mb_present_6_fdr < .05 )|> nrow()` exam 6 proteins were significantly associated with MB at an FDR corrected `P<.05`.
 
@@ -759,14 +759,13 @@ rm(full_res)
 
 -   The E1 proteins `->` E6 MRI for FA included data from N=`{r} print(max(PWAS_res$mb_present_1_nobs, na.rm=TRUE))` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/MB_E1_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/MB_E1_PWAS.csv)
 
 -   A total of N=`{r} PWAS_res |> dplyr::filter(mb_present_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with MB at an FDR correct `P<.05`.
 
 \newpage
 
 ::: landscape
-
 # Appendix 1 : Full results for fractional anisotropy and exam 1 proteins
 
 ## Full covariates
@@ -870,73 +869,3 @@ if (requireNamespace("sessioninfo", quietly = TRUE)) {
 }
 ```
 
-```{r 'venn2', eval=FALSE}
-
-library(VennDiagram)
-
-log_folder <- "Archive/venn_logs"
-
-# Create the directory if it doesn't exist
-if (!dir.exists(log_folder)) {
-  dir.create(log_folder)
-}
-
-output_file_path <- file.path(log_folder, "my_venn_diagram.png")
-
-
-
-
-
-WMH_temp <- subset(PWAS_res_long, select=Assay, P_time_wmh_int_fdr<.05)
-WMH_temp$Var <- "WMH"
-
-FA_temp <- subset(PWAS_res_long, select=Assay, P_time_fa_int_fdr<.05)
-FA_temp$Var <- "FA"
-
-EPVS_temp <- subset(PWAS_res_long, select=Assay, P_time_epvs_int_fdr<.05)
-EPVS_temp$Var <- "EPVS"
-
-Venn_F1 <- rbind(WMH_temp, FA_temp)
-#rm(CONGA_temp)
-#rm(MAGE_temp)
-Venn_F1 <- rbind(Venn_F1, EPVS_temp)
-#rm(TATR_temp)
-
-venn.plot <- venn.diagram(x = list(
-  Venn_F1 %>% filter(Var=="WMH") %>% dplyr::select(Assay) %>% unlist() , 
-  Venn_F1 %>% filter(Var=="FA") %>% dplyr::select(Assay) %>% unlist() , 
-  Venn_F1 %>% filter(Var=="EPVS") %>% dplyr::select(Assay) %>% unlist() 
-),
-category.names = c("WMH" , "FA" , "PVS"),
-filename = NULL,
-output = TRUE ,
-imagetype="png" ,
-height = 700 , 
-width = 700 , 
-resolution = 400,
-compression = "lzw",
-lwd = 0.5,
-
-col=c('blue', 'red', 'chartreuse3'),
-fill = c('blue', 'red', 'chartreuse3'),
-
-cex = 2,
-fontfamily = "sans",
-cat.cex = 2,
-cat.default.pos = "text", 
-#cat.pos = c(0, 90, 180),
-cat.dist = c(0, 0, 0),
-cat.fontfamily = "sans",
-cat.col = c("grey0", 'grey0', 'grey0'),
-margin=0,
-main="",
-main.cex=0.3, 
-cat.just=list(c(0.5,-1), c(0.8,-1) , c(0.5,-1))
-)
-
-#png(file="/Users/lekki/Library/CloudStorage/GoogleDrive-lekki.wood@gmail.com/My #Drive/Conferences and Presentations/Conferences/ADA Scientific Sessions #2026/CGM/venn_diagram.png", width=700, height=500)
-grid.newpage()
-grid.draw(venn.plot)
-#dev.off()
-
-```
