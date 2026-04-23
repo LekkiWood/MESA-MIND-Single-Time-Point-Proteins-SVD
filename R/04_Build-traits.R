@@ -6,13 +6,14 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
   #Bridging file
   bridge <- data.table::fread(path_bridge) |>
     dplyr::select(`SHARE ID Number`, `MESA Participant ID`) |>
-    dplyr::rename(sidno = `SHARE ID Number`, idno = `MESA Participant ID`)
+    dplyr::rename(sidno = `SHARE ID Number`, idno = `MESA Participant ID`)|>
+    dplyr::mutate(idno = as.integer(as.character(idno)))
   
-
+  
   
   #---------------------------Build outcomes file-----------------------#
   
-
+  
   ###############
   #Microbleeds
   ###############
@@ -30,9 +31,13 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
   ###############
   
   EVPS_info <- read.csv(path_evps) |>
-    dplyr::mutate(epvs = dplyr::case_when(pvs_exclude == 1 ~ NA_real_,
-                                          TRUE ~ epvs_wholebrain_vol)) |>
-    dplyr::select(idno, pvs_exclude, epvs)
+    dplyr::mutate(epvs_basalganglia = dplyr::case_when(pvs_exclude == 1 ~ NA_real_,
+                                                       TRUE ~ epvs_basalganglia_vol),
+                  epvs_thalamus = dplyr::case_when(pvs_exclude == 1 ~ NA_real_,
+                                                   TRUE ~ epvs_thalamus_vol),
+                  epvs_insula = dplyr::case_when(pvs_exclude == 1 ~ NA_real_,
+                                                 TRUE ~ epvs_insula_vol)) |>
+    dplyr::select(idno, pvs_exclude, epvs_basalganglia, epvs_thalamus, epvs_insula)
   
   ###############
   #WMH
@@ -43,7 +48,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
                                          TRUE ~ wmh_wm/1000)) |>
     dplyr::select(idno, wmh, wmh_exclude)
   
-
+  
   ###############
   #WMFA
   ###############
@@ -57,21 +62,21 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
   ###############
   #Traits-file
   ###############
- 
+  
   Traits <- MB_info |>
     dplyr::full_join(EVPS_info, dplyr::join_by(idno)) |>
     dplyr::full_join(WMH_info, dplyr::join_by(idno)) |>
     dplyr::full_join(WMFA_info, dplyr::join_by(idno)) |>
     dplyr::left_join(bridge, dplyr::join_by(idno)) |>
-    dplyr::filter(!is.na(mb_present) | !is.na(epvs) | !is.na(epvs) | !is.na(wmh) | !is.na(fa)) 
-    
+    dplyr::filter(!is.na(mb_present) | !is.na(epvs_thalamus) | !is.na(epvs_insula) |!is.na(epvs_basalganglia)| !is.na(wmh) | !is.na(fa)) 
+  
   
   
   mind_ids <- Traits |>
     dplyr::select(idno, sidno)
   
   #---------------------------N with protein data-----------------------#
-
+  
   
   protein_and_MIND_ids <- cleaned_proteins |>
     #dplyr::full_join(cleaned_proteins, dplyr::join_by(idno, sidno)) |>
@@ -82,11 +87,11 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
   Traits <- Traits |>
     dplyr::filter(idno %in% protein_and_MIND_ids$idno)
   
-
+  
   
   #------------------------------Build covariates-------------------------------
   
-
+  
   
   #########Time invariant
   
@@ -95,7 +100,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
   ###############
   
   ICV_info <- read.table(path_icv, header=TRUE, sep="\t")|>
-    dplyr::mutate(sidno = subject_id) |>
+    dplyr::mutate(sidno=subject_id)|>
     dplyr::select(sidno, icv)
   
   ###############
@@ -117,7 +122,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
                                                  TRUE ~ NA_real_),
                   CHFprevalent = dplyr::case_when(chf == "No" ~ 0,
                                                   chf == "Yes" ~ 1,
-                                                 TRUE ~ NA_real_)) |>
+                                                  TRUE ~ NA_real_)) |>
     dplyr::select(idno, MIprevalent,CHFprevalent) 
   
   ###############
@@ -130,7 +135,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
                                         TRUE ~ 2)) |>
     dplyr::mutate(E4 = as.factor(E4)) |>
     dplyr::select(idno, E4)
-
+  
   
   E1_always <- foreign::read.dta(path_E1_covs) |>
     dplyr::mutate(edu = dplyr::case_when(
@@ -165,14 +170,14 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
                   htnmeds = dplyr::case_when(htnmed6c =="NO" ~ 0,
                                              htnmed6c =="YES" ~ 1,
                                              TRUE ~ NA_real_)
-                  )|>
+    )|>
     dplyr::left_join(bridge, dplyr::join_by(idno)) |>
     dplyr::left_join(ICV_info, dplyr::join_by(sidno)) |>
     dplyr::left_join(ApoE_info, dplyr::join_by(idno)) |>
     dplyr::left_join(afib_info, dplyr::join_by(sidno)) |>
     dplyr::left_join(CVD_info, dplyr::join_by(idno)) |>
     dplyr::select(idno, sidno, site, ldl, sbp, icv, E4, AFprevalent, MIprevalent, CHFprevalent, htnmeds)
-                    
+  
   
   
   
@@ -196,7 +201,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
                                              cig1c=="2: CURRENT" ~ 3,
                                              TRUE ~ NA_real_),
                   time = 0,
-                  )|>
+    )|>
     dplyr::select(idno, age, BMI, diabetes, egfr, smoking, time) |>
     dplyr::left_join(E1_always, dplyr::join_by(idno)) |>
     dplyr::left_join(E6_always, dplyr::join_by(idno, sidno)) |>
@@ -204,7 +209,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
     dplyr::mutate(Exam = 1) |>
     dplyr::select(idno, sidno, Exam, time, BL_age, age, gender, site, edu, race, BMI, 
                   smoking, ldl, sbp, diabetes, htnmeds, AFprevalent, MIprevalent, CHFprevalent, 
-                  E4, egfr, icv, fa, wmh, epvs, mb_present) 
+                  E4, egfr, icv, fa, wmh, epvs_thalamus, epvs_basalganglia, epvs_insula, mb_present) 
   
   
   ###############
@@ -233,7 +238,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
     dplyr::mutate(Exam = 5) |>
     dplyr::select(idno, sidno, Exam, time, BL_age, age, gender, site, edu, race, BMI, 
                   smoking, ldl, sbp, diabetes, htnmeds, AFprevalent, MIprevalent, CHFprevalent, 
-                  E4, egfr, icv, fa, wmh, epvs, mb_present) 
+                  E4, egfr, icv, fa, wmh, epvs_thalamus, epvs_basalganglia, epvs_insula, mb_present) 
   
   ###############
   #E6
@@ -261,7 +266,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
     dplyr::mutate(Exam = 6) |>
     dplyr::select(idno, sidno, Exam, time, BL_age, age, gender, site, edu, race, BMI, 
                   smoking, ldl, sbp, diabetes, htnmeds, AFprevalent, MIprevalent, CHFprevalent, 
-                  E4, egfr, icv, fa, wmh, epvs, mb_present) 
+                  E4, egfr, icv, fa, wmh, epvs_thalamus, epvs_basalganglia, epvs_insula, mb_present) 
   
   #----------------------N with MIND, protein and covs -----------------------------------
   
@@ -283,7 +288,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
                   CHFprevalent = factor(CHFprevalent), 
                   E4 = factor(E4), 
                   mb_present = factor(mb_present)
-      
+                  
     ) |>
     dplyr::filter(idno %in% protein_and_MIND_ids$idno)
   
@@ -293,7 +298,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
   #!is.na(ldl) & !is.na(sbp) & !is.na(diabetes) & !is.na(htnmeds) & !is.na(AFprevalent) & !is.na(MIprevalent) & 
   #!is.na(CHFprevalent) & !is.na(E4) & !is.na(egfr) & !is.na(icv))
   
-
+  
   
   
   # protein_and_MIND_and_cov_ids <- full_db |>
@@ -315,7 +320,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
                      wmh_filename = path_wmh,
                      icv_filename = path_icv,
                      wmfa_filename = path_wmfa)
-    )
+  )
   
   #----------------Outputs -----------------------------#
   
@@ -327,7 +332,7 @@ build_traits_function <- function(path_E1_covs, path_E5_covs, path_E6_covs, path
     mind_ids = mind_ids,
     protein_and_MIND_ids = protein_and_MIND_ids #,
     #protein_and_MIND_and_cov_ids = protein_and_MIND_and_cov_ids
-    )
+  )
   
   
 }

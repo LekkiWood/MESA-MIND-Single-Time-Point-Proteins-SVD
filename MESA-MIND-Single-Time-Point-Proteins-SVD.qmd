@@ -67,6 +67,8 @@ if (!requireNamespace("naniar", quietly = TRUE)) {
 
 \newpage
 
+\newpage
+
 # Important Notes - read me first
 
 ```{r}
@@ -122,7 +124,8 @@ gtsummary::tbl_summary(
     gtsummary::all_stat_cols() ~ "Field Center"
   ) |>
   gtsummary::as_gt() |>
-  gt::tab_options(page.orientation = "landscape") |>
+  gt::tab_options(page.orientation = "landscape",
+                  latex.use_longtable = TRUE) |>
   gt::tab_style(
     style = gt::cell_text(weight = "bold"),
     locations = gt::cells_body(
@@ -159,20 +162,20 @@ finalclean_N_by_exam <- targets::tar_read(Proteins_clean_N)
 
 ## Input file names
 
--   A table of protein abundances: `{r} print(unlist(strsplit(QC_info$filenames$raw_proteins_file_name, split="/"))[8])`
--   Sample information to link TOPMed IDs to unique MESA SHARe ID and exam combinations: `{r} print(unlist(strsplit(QC_info$filenames$raw_protein_info_file_name, split="/"))[8])`
--   Keys to link Olink IDs to names compounds: `{r} print(unlist(strsplit(QC_info$filenames$ raw_protein_keys_file_name, split="/"))[8])`
--   A file to bridge SHARe ids (sidno) with MESA IDs (idno) `{r} print(unlist(strsplit(QC_info$filenames$raw_bridgingfile_file_name, split="/"))[7])`
+-   A table of protein abundances: `r (unlist(strsplit(QC_info$filenames$raw_proteins_file_name, split="/"))[8])`
+-   Sample information to link TOPMed IDs to unique MESA SHARe ID and exam combinations: `r (unlist(strsplit(QC_info$filenames$raw_protein_info_file_name, split="/"))[8])`
+-   Keys to link Olink IDs to names compounds: `r (unlist(strsplit(QC_info$filenames$raw_protein_keys_file_name, split="/"))[8])`
+-   A file to bridge SHARe ids (sidno) with MESA IDs (idno) `r (unlist(strsplit(QC_info$filenames$raw_bridgingfile_file_name, split="/"))[7])`
 
 ## Raw file info
 
--   The raw protein abundance file contained information on N=`{r} print(QC_info$raw_inputs$raw_protein_N_all)` protein assays, including those used for QC.
+-   The raw protein abundance file contained information on N=`r (QC_info$raw_inputs$raw_protein_N_all)` protein assays, including those used for QC.
 
--   When removing assays for QC, the raw protein abundance file contained information on N=`{r} print(QC_info$raw_inputs$raw_protein_N_proteins[1,1])` proteins.
+-   When removing assays for QC, the raw protein abundance file contained information on N=`r (QC_info$raw_inputs$raw_protein_N_proteins[1,1])` proteins.
 
--   The protein abundance file contained information on N=`{r} print(QC_info$raw_inputs$raw_N_all)` sample IDs (i.e., unique participant/exam combinations), including bridging samples.
+-   The protein abundance file contained information on N=`r (QC_info$raw_inputs$raw_N_all)` sample IDs (i.e., unique participant/exam combinations), including bridging samples.
 
--   After removing QC samples (including bridging, controls, and one duplicate) the protein abundance file contained information on N=`{r} print(QC_info$raw_inputs$raw_N_nobridge)` sample IDs (i.e., unique participant/exam combinations).
+-   After removing QC samples (including bridging, controls, and one duplicate) the protein abundance file contained information on N=`r (QC_info$raw_inputs$raw_N_nobridge)` sample IDs (i.e., unique participant/exam combinations).
 
 ### Formatting
 
@@ -184,13 +187,13 @@ finalclean_N_by_exam <- targets::tar_read(Proteins_clean_N)
 
 -   Data were put into wide format, with "SampleID" as the unique ID, "OlinkID" forming the variable names (protein identifiers), and values taken from the "NPX" column.
 
-    -   In wide format, the file contained information on N=`{r} print(QC_info$formatted_protein_file_info$unique_sampleids)` unique sample IDs.
+    -   In wide format, the file contained information on N=`r print(QC_info$formatted_protein_file_info$unique_sampleids)` unique sample IDs.
 
-    -   In wide format, the file contained information on N=`{r} print(QC_info$formatted_protein_file_info$duplicated_sampleids)` duplicated sample IDs. ^1^
+    -   In wide format, the file contained information on N=`r print(QC_info$formatted_protein_file_info$duplicated_sampleids)` duplicated sample IDs. ^1^
 
 -   SHARe IDs, and subsequently MESA IDs, were merged into the file with exam information.
 
--   At this point, the range of unique SHARe ID by exam combinations was N=`{r} range(QC_info$initial_dupes$Freq)[1]` - `{r} range(QC_info$initial_dupes$Freq)[2]`. This indicates no sample ID were duplicated in the assays.
+-   At this point, the range of unique SHARe ID by exam combinations was N=`r range(QC_info$initial_dupes$Freq)[1]` - `r range(QC_info$initial_dupes$Freq)[2]`. This indicates no sample ID were duplicated in the assays.
 
 -   The formatted protein file was used to calculate the coefficient of variation (CV) using the formula: CV = sqrt(2`^`(sigma`^`2)-1).
 
@@ -211,6 +214,8 @@ knitr::kable(finalclean_N_by_exam, format="latex") #print(knitr::kable(finalclea
 
 # Step 2: Format Phenotypes
 
+# 
+
 ```{r}
 #| label: read-in-trait-info
 
@@ -221,37 +226,41 @@ missing_cov_info <- targets::tar_read(missing_cov_info)
 
 ## Input files
 
--   Covariates from E1: `{r} print(unlist(strsplit(Traits_QC_info$filenames$E1_covs_filename, split="/"))[7])`
+-   Covariates from E1: `r (unlist(strsplit(Traits_QC_info$filenames$E1_covs_filename, split="/"))[7])`
 
--   Covariates from E5: `{r} print(unlist(strsplit(Traits_QC_info$filenames$E5_covs_filename, split="/"))[7])`
+-   Covariates from E5: `r (unlist(strsplit(Traits_QC_info$filenames$E5_covs_filename, split="/"))[7])`
 
--   Covariates from E6: `{r} print(unlist(strsplit(Traits_QC_info$filenames$E6_covs_filename, split="/"))[7])`
+-   Covariates from E6: `r (unlist(strsplit(Traits_QC_info$filenames$E6_covs_filename, split="/"))[7])`
 
--   Afib info: `{r} print(unlist(strsplit(Traits_QC_info$filenames$afib_filename, split="/"))[7])`
+-   Afib info: `r (unlist(strsplit(Traits_QC_info$filenames$afib_filename, split="/"))[7])`
 
--   ApoE info: `{r} print(unlist(strsplit(Traits_QC_info$filenames$apoe_filename, split="/"))[7])`
+-   ApoE info: `r (unlist(strsplit(Traits_QC_info$filenames$apoe_filename, split="/"))[7])`
 
--   Incident CVD: `{r} print(unlist(strsplit(Traits_QC_info$filenames$cvd_filename, split="/"))[7])`
+-   Incident CVD: `r (unlist(strsplit(Traits_QC_info$filenames$cvd_filename, split="/"))[7])`
 
--   Microbleeds: `{r} print(unlist(strsplit(Traits_QC_info$filenames$mb_filename, split="/"))[7])`
+-   Microbleeds: `r (unlist(strsplit(Traits_QC_info$filenames$mb_filename, split="/"))[7])`
 
--   Perivascular spaces: `{r} print(unlist(strsplit(Traits_QC_info$filenames$evps_filename, split="/"))[7])`
+-   Perivascular spaces: `r (unlist(strsplit(Traits_QC_info$filenames$evps_filename, split="/"))[7])`
 
--   White matter hyperintensities: `{r} print(unlist(strsplit(Traits_QC_info$filenames$wmh_filename, split="/"))[7])`
+-   White matter hyperintensities: `r (unlist(strsplit(Traits_QC_info$filenames$wmh_filename, split="/"))[7])`
 
--   Intracranial volumes: `{r} print(unlist(strsplit(Traits_QC_info$filenames$icv_filename, split="/"))[7])`
+-   Intracranial volumes: `r (unlist(strsplit(Traits_QC_info$filenames$icv_filename, split="/"))[7])`
 
--   Fractional anisotropy: `{r} print(unlist(strsplit(Traits_QC_info$filenames$wmfa_filename, split="/"))[7])`
+-   Fractional anisotropy: `r (unlist(strsplit(Traits_QC_info$filenames$wmfa_filename, split="/"))[7])`
 
--   White matter hyperintensities: `{r} print(unlist(strsplit(Traits_QC_info$filenames$wmh_filename, split="/"))[7])`
+-   White matter hyperintensities: `r (unlist(strsplit(Traits_QC_info$filenames$wmh_filename, split="/"))[7])`
 
 ## Formatting
 
 ### Outcomes:
 
--   Microbleeds were coded as 0/1, where 0= no microbleeds (value: 0) and 1 = presence of microbleeds (all non-zero values except missing). Then, those images with a low image quality (value = 4; N=`{r} length(Traits_db$qsm_swi_image_quality[Traits_db$qsm_swi_image_quality == 4 & !is.na(Traits_db$qsm_swi_image_quality)])` ) were recoded to missing.
+-   Microbleeds were coded as 0/1, where 0= no microbleeds (value: 0) and 1 = presence of microbleeds (all non-zero values except missing). Then, those images with a low image quality (value = 4; N=`r` length(Traits_db$qsm_swi_image_quality[Traits_db$qsm_swi_image_quality == 4 & !is.na(Traits_db\$qsm_swi_image_quality)\])\` ) were recoded to missing.
 
--   Perivascular spaces (variable: epvs_wholebrain_vol) were recoded to missing where the variable 'pvs_exclude' was coded as 1 (N=`{r} length(Traits_db[Traits_db$pvs_exclude ==1 & !is.na(Traits_db$pvs_exclude),]$pvs_exclude)`).
+-   Basal ganglia perivascular spaces (variable: epvs_basalganglia) were recoded to missing where the variable 'pvs_exclude' was coded as 1 (N=`r length(Traits_db[Traits_db$pvs_exclude ==1 & !is.na(Traits_db$pvs_exclude),]$pvs_exclude)`).
+
+-   Thalamus perivascular spaces (variable: epvs_thalamus) were recoded to missing where the variable 'pvs_exclude' was coded as 1 (N=`r length(Traits_db[Traits_db$pvs_exclude ==1 & !is.na(Traits_db$pvs_exclude),]$pvs_exclude)`).
+
+-   Insula eprivascular spaces (variable: epvs_insula) were recoded to missing where the variable 'pvs_exclude' was coded as 1 (N=`r length(Traits_db[Traits_db$pvs_exclude ==1 & !is.na(Traits_db$pvs_exclude),]$pvs_exclude)`).
 
 -   White matter hyperintensities (variable: wm_wmh) were divided by 1000 to convert to ml (following Rizwan's code), and those where the variable wmh_exclude had a code of 1 were set to missing.
 
@@ -325,11 +334,15 @@ mind_ids <- targets::tar_read(mind_ids)
 #protein_and_MIND_and_cov_ids <- targets::tar_read(protein_and_MIND_and_cov_ids)
 ```
 
--   There were N=`{r} print(length(unique(mind_ids$idno)))` MESA participants with at least one MRI outcome after the exclusions above.
+-   There were N=`r (length(unique(mind_ids$idno)))` MESA participants with at least one MRI outcome after the exclusions above.
 
--   Of those with MRI data, N=`{r} print(length(unique(Traits_db$idno)))` participants had protein data, equating to N=`{r} length(unique(Traits_db[which(Traits_db$Exam==1),]$idno))` at exam 1, N=`{r} length(unique(Traits_db[which(Traits_db$Exam==5),]$idno))` at exam 5, and N=`{r} length(unique(Traits_db[which(Traits_db$Exam==6),]$idno))` at exam 6
+-   Of those with MRI data, N=`r (length(unique(Traits_db$idno)))` participants had protein data, equating to N=`r length(unique(Traits_db[which(Traits_db$Exam==1),]$idno))` at exam 1, N=`r length(unique(Traits_db[which(Traits_db$Exam==5),]$idno))` at exam 5, and N=`r length(unique(Traits_db[which(Traits_db$Exam==6),]$idno))` at exam 6
 
 -   Sample descriptives are available in @tbl-of-descriptives
+
+<!-- -->
+
+-   
 
 ::: landscape
 ```{r}
@@ -342,7 +355,8 @@ bold_labels <- c(
   "Takes hypertentsion medicine", "Atrial fibrillation", "Myocardial Infarction",
   "Coronary Heart Failure", "ApoeE information", "Smoking status",
   "Kidney function (egfr)", "Intracranial volume", "Fractional anisotropy",
-  "White matter hyperintensities", "Enlarged perivascular spaces",
+  "White matter hyperintensities", "Enlarged Basal Ganglia perivascular spaces",
+  "Enlarged Thalamus perivascular spaces","Enlarged Insula perivascular spaces",
   "Presence of microbleeds?"
 )
 
@@ -361,9 +375,6 @@ table1 <- Traits_db |>
         mb_present_desc = factor(mb_present,
                        levels = c("0", "1"),
                        labels = c("No", "Yes")),
-                       smoking_desc = factor(smoking,
-                       levels = c("0", "1", "2"),
-                       labels = c("Never", "Former", "Current")),
         diabetes_desc = factor(diabetes,
                        levels = c("0", "1"),
                        labels = c("Normoglycemia/IFG", "Diabetes (treated or untreated)")),
@@ -393,7 +404,7 @@ table1 <- Traits_db |>
                        labels = c("Never", "Former", "Current"))
       ) |>
 gtsummary::tbl_summary(
-    include = c(age, gender_desc, site_desc, edu_desc, race_desc, BMI, smoking_desc, ldl, sbp, diabetes_desc, htnmeds_desc, AFprevalent_desc, MIprevalent_desc, CHFprevalent_desc, E4_desc, egfr, icv, fa, wmh, epvs, mb_present_desc),
+    include = c(age, gender_desc, site_desc, edu_desc, race_desc, BMI, smoking_desc, ldl, sbp, diabetes_desc, htnmeds_desc, AFprevalent_desc, MIprevalent_desc, CHFprevalent_desc, E4_desc, egfr, icv, fa, wmh, epvs_basalganglia, epvs_thalamus, epvs_insula, mb_present_desc),
     by = Exam,
     statistic = list(
       gtsummary::all_continuous() ~ "{mean} ({sd})",
@@ -421,7 +432,10 @@ gtsummary::tbl_summary(
                  icv = "Intracranial volume",
                  fa ="Fractional anisotropy",
                  wmh="White matter hyperintensities",
-                 epvs="Enlarged perivascular spaces",
+                 epvs_basalganglia = "Enlarged Basal Ganglia perivascular spaces",
+               epvs_thalamus ="Enlarged Thalamus perivascular spaces",
+               epvs_insula ="Enlarged Insula perivascular spaces",
+                 mb_present_desc ~ "categorical",
                  mb_present_desc = "Presence of microbleeds?"),
    type = list(age ~ "continuous",
                  gender_desc ~ "categorical",
@@ -442,7 +456,9 @@ gtsummary::tbl_summary(
                  icv ~ "continuous",
                  fa ~ "continuous",
                  wmh ~ "continuous",
-                 epvs ~ "continuous",
+                 epvs_basalganglia ~ "continuous", 
+                 epvs_thalamus ~ "continuous", 
+                 epvs_insula ~ "continuous",
                  mb_present_desc ~ "categorical"
     ) 
 ) |>
@@ -485,8 +501,14 @@ rm(table1)
 WMH_E6_PWAS <- targets::tar_read(WMH_E6_PWAS)
 WMH_E1_PWAS <- targets::tar_read(WMH_E1_PWAS)
 
-EPVS_E6_PWAS <- targets::tar_read(EPVS_E6_PWAS)
-EPVS_E1_PWAS <- targets::tar_read(EPVS_E1_PWAS)
+EPVS_basalganglia_E6_PWAS <- targets::tar_read(EPVS_basalganglia_E6_PWAS)
+EPVS_basalganglia_E1_PWAS <- targets::tar_read(EPVS_basalganglia_E1_PWAS)
+
+EPVS_thalamus_E6_PWAS <- targets::tar_read(EPVS_thalamus_E6_PWAS)
+EPVS_thalamus_E1_PWAS <- targets::tar_read(EPVS_thalamus_E1_PWAS)
+
+EPVS_insula_E6_PWAS <- targets::tar_read(EPVS_insula_E6_PWAS)
+EPVS_insula_E1_PWAS <- targets::tar_read(EPVS_insula_E1_PWAS)
 
 MB_E6_PWAS <- targets::tar_read(MB_E6_PWAS)
 MB_E1_PWAS <- targets::tar_read(MB_E1_PWAS)
@@ -496,10 +518,14 @@ FA_E1_PWAS <- targets::tar_read(FA_E1_PWAS)
 
 PWAS_res <- WMH_E6_PWAS |>
   dplyr::full_join(WMH_E1_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
-  dplyr::full_join(EPVS_E1_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
-  dplyr::full_join(EPVS_E6_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
+  dplyr::full_join(EPVS_basalganglia_E1_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
+  dplyr::full_join(EPVS_basalganglia_E6_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
+  dplyr::full_join(EPVS_thalamus_E1_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
+  dplyr::full_join(EPVS_thalamus_E6_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
+  dplyr::full_join(EPVS_insula_E1_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
+  dplyr::full_join(EPVS_insula_E6_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
   dplyr::full_join(MB_E1_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
-    dplyr::full_join(MB_E6_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
+  dplyr::full_join(MB_E6_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
   dplyr::full_join(FA_E1_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain)) |>
   dplyr::full_join(FA_E6_PWAS, dplyr::join_by(OlinkID, cv_percent, UniProt, Assay, Panel, Retain))
 
@@ -540,67 +566,117 @@ protein_names <- PWAS_res |>
 #### Model Specification
 
 -   The associations between WMH and proteins were analyzed via linear regression
--   For WMH the numeric covariates included `{r} print(wmh_numeric_covs)`. ^2^
--   For WMH the factor covariates included `{r} print(wmh_factor_covs)`. ^2^
+-   For WMH the numeric covariates included `r (wmh_numeric_covs)`. ^2^
+-   For WMH the factor covariates included `r (wmh_factor_covs)`. ^2^
 -   WMH was transformed using an inverse normal transformation (with blom constant).
 
 #### WMH: Exam 6 proteins
 
--   The E6 proteins `->` E6 MRI for WMH included data from N=`{r} print(max(PWAS_res$wmh_6_nobs, na.rm=TRUE))` participants.
+-   The E6 proteins `->` E6 MRI for WMH included data from N=`r (max(PWAS_res$wmh_6_nobs, na.rm=TRUE))` participants.
 
 -   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/WMH_E6_PWAS.csv)
 
--   A total of N=`{r} PWAS_res |> dplyr::filter(wmh_6_fdr < .05 )|> nrow()` exam 6 proteins were significantly associated with WMH at an FDR corrected `P<.05`.
+-   A total of N=`r (PWAS_res |> dplyr::filter(wmh_6_fdr < .05 )|> nrow())` exam 6 proteins were significantly associated with WMH at an FDR corrected `P<.05`.
 
 #### WMH: Exam 1 proteins
 
--   The E1 proteins `->` E6 MRI for WMH included data from N=`{r} print(max(PWAS_res$wmh_1_nobs, na.rm=TRUE))` participants.
+-   The E1 proteins `->` E6 MRI for WMH included data from N =`r (max(PWAS_res$wmh_1_nobs, na.rm=TRUE))` participants.
 
 -   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/WMH_E1_PWAS.csv)
 
--   A total of N=`{r} PWAS_res |> dplyr::filter(wmh_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with WMH at an FDR corrected `P<.05`.
+-   A total of N=`r (PWAS_res |> dplyr::filter(wmh_1_fdr < .05 )|> nrow())` exam 1 proteins were significantly associated with WMH at an FDR corrected `P<.05`.
 
-### Enlarged Perivascular Spaces (EPVS)
+### Enlarged Basal Ganglia Perivascular Spaces (EPVS)
+
+#### Model Specification
+
+-   The associations between Basal Ganglia EPVS and proteins were analyzed via linear regression
+-   For Basal Ganglia EPVS the numeric covariates included `r (epvs_numeric_covs)`. ^2^
+-   For Basal Ganglia EPVS the factor covariates included `r (epvs_factor_covs)`. ^2^
+-   Basal Ganglia EPVS was transformed using an inverse normal transformation (with blom constant).
+
+#### Basal Ganglia EPVS: Exam 6 proteins
+
+-   The E6 proteins `->` E6 MRI for Basal Ganglia EPVS included data from N=`r max(PWAS_res$epvs_basalganglia_6_nobs, na.rm=TRUE)` participants.
+
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_basalganglia_E6_PWAS.csv)
+
+-   A total of N=`r PWAS_res |> dplyr::filter(epvs_basalganglia_6_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS basalganglia at an FDR corrected `P<.05`
+
+#### Basal Ganglia EPVS: Exam 1 proteins
+
+-   The E1 proteins `->` E6 MRI for EPVS basalganglia included data from N=`r max(PWAS_res$epvs_basalganglia_1_nobs, na.rm=TRUE)` participants.
+
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_basalganglia_E1_PWAS.csv)
+
+-   A total of N=`r PWAS_res |> dplyr::filter(epvs_basalganglia_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS basalganglia at an FDR corrected `P<.05`
+
+### Enlarged Thalamus Perivascular Spaces (EPVS)
 
 #### Model Specification
 
 -   The associations between EPVS and proteins were analyzed via linear regression
--   For EPVS the numeric covariates included `{r} print(epvs_numeric_covs)`. ^2^
--   For EPVS the factor covariates included `{r} print(epvs_factor_covs)`. ^2^
--   EPVS was transformed using an inverse normal transformation (with blom constant).
+-   For Thalamus EPVS the numeric covariates included `r (epvs_numeric_covs)`. ^2^
+-   For Thalamus EPVS the factor covariates included `r (epvs_factor_covs)`. ^2^
+-   Thalamus EPVS was transformed using an inverse normal transformation (with blom constant).
 
-#### EPVS: Exam 6 proteins
+#### Thalamus EPVS: Exam 6 proteins
 
--   The E6 proteins `->` E6 MRI for EPVS included data from N=`{r} print(max(PWAS_res$epvs_6_nobs, na.rm=TRUE))` participants.
+-   The E6 proteins `->` E6 MRI for Thalamus EPVS included data from N=`r max(PWAS_res$epvs_thalamus_6_nobs, na.rm=TRUE)` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_E6_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_thalamus_E6_PWAS.csv)
 
--   A total of N=`{r} PWAS_res |> dplyr::filter(epvs_6_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS at an FDR corrected `P<.05`
+-   A total of N=`r PWAS_res |> dplyr::filter(epvs_thalamus_6_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS thalamus at an FDR corrected `P<.05`
 
-#### EPVS: Exam 1 proteins
+#### Thalamus EPVS: Exam 1 proteins
 
--   The E1 proteins `->` E6 MRI for EPVS included data from N=`{r} print(max(PWAS_res$epvs_1_nobs, na.rm=TRUE))` participants.
+-   The E1 proteins `->` E6 MRI for Thalamus EPVS included data from N=`r max(PWAS_res$epvs_thalamus_1_nobs, na.rm=TRUE)` participants.
 
--   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_E1_PWAS.csv)
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_thalamus_E1_PWAS.csv)
 
--   A total of N=`{r} PWAS_res |> dplyr::filter(epvs_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS at an FDR corrected `P<.05`
+-   A total of N=`r PWAS_res |> dplyr::filter(epvs_thalamus_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS thalamus at an FDR corrected `P<.05`
+
+### Enlarged Insula Perivascular Spaces (EPVS)
+
+#### Model Specification
+
+-   The associations between Insula EPVS and proteins were analyzed via linear regression
+-   For Insula EPVS the numeric covariates included `r (epvs_numeric_covs)`. ^2^
+-   For Insula EPVS the factor covariates included `r (epvs_factor_covs)`. ^2^
+-   Insula EPVS was transformed using an inverse normal transformation (with blom constant).
+
+#### Insula EPVS: Exam 6 proteins
+
+-   The E6 proteins `->` E6 MRI for Insula EPVS included data from N=`r max(PWAS_res$epvs_insula_6_nobs, na.rm=TRUE)` participants.
+
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_insula_E6_PWAS.csv)
+
+-   A total of N=`r PWAS_res |> dplyr::filter(epvs_insula_6_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS insula at an FDR corrected `P<.05`
+
+#### Insula EPVS: Exam 1 proteins
+
+-   The E1 proteins `->` E6 MRI for Insula EPVS included data from N=`r max(PWAS_res$epvs_insula_1_nobs, na.rm=TRUE)` participants.
+
+-   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/EVPS_insula_E1_PWAS.csv)
+
+-   A total of N=`r PWAS_res |> dplyr::filter(epvs_insula_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with EPVS insula at an FDR corrected `P<.05`
 
 ### Fractional Anisotropy (FA)
 
 #### Model Specification
 
 -   The associations between FA and proteins were analyzed via linear regression
--   For FA the numeric covariates included `{r} print(fa_numeric_covs)`. ^2^
--   For FA the factor covariates included `{r} print(fa_factor_covs)`. ^2^
+-   For FA the numeric covariates included `r (fa_numeric_covs)`. ^2^
+-   For FA the factor covariates included `r (fa_factor_covs)`. ^2^
 -   FA was transformed using an inverse normal transformation (with blom constant).
 
 #### FA: Exam 6 proteins
 
--   The E6 proteins `->` E6 MRI for FA included data from N=`{r} print(max(PWAS_res$fa_6_nobs, na.rm=TRUE))` participants.
+-   The E6 proteins `->` E6 MRI for FA included data from N=`r (max(PWAS_res$fa_6_nobs, na.rm=TRUE))` participants.
 
 -   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/FA_E6_PWAS.csv)
 
--   A total of N=`{r} PWAS_res |> dplyr::filter(fa_6_fdr < .05 )|> nrow()` exam 6 proteins were significantly associated with FA at an FDR corrected `P<.05` (see @tbl-fa-E6-sig and @fig-fa-E6).
+-   A total of N=`r PWAS_res |> dplyr::filter(fa_6_fdr < .05 )|> nrow()` exam 6 proteins were significantly associated with FA at an FDR corrected `P<.05` (see @tbl-fa-E6-sig and @fig-fa-E6).
 
 ::: landscape
 ```{r}
@@ -665,19 +741,18 @@ rm(full_res)
 
 #### FA: Exam 1 proteins
 
--   The E1 proteins `->` E6 MRI for FA included data from N=`{r} print(max(PWAS_res$fa_1_nobs, na.rm=TRUE))` participants.
+-   The E1 proteins `->` E6 MRI for FA included data from N=`r (max(PWAS_res$fa_1_nobs, na.rm=TRUE))` participants.
 
 -   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/FA_E1_PWAS.csv)
 
--   A total of N=`{r} PWAS_res |> dplyr::filter(fa_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with FA at an FDR corrected `P<.05` (see @tbl-fa-E1-sig and @fig-fa-E1 in Appendix 1).
+-   A total of N=`r PWAS_res |> dplyr::filter(fa_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with FA at an FDR corrected `P<.05` (see @tbl-fa-E1-sig and @fig-fa-E1 in Appendix 1).
 
 -   Due to the large number of predictors, a penalized model was run (elastic net penalty) on a 50:50 test:training split of the data. The full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Longitudinal-Proteomics-cSVD/blob/main/outputs/FA_E1_PWAS_fullLASSO.csv).
 
--   From the N=`{r} PWAS_res |> dplyr::filter(fa_1_fdr < .05 )|> nrow()` exam 1 proteins significantly associated with FA at an FDR corrected `P<.05`, the LASSO identified N=`r print(FA_E1_LASSO_importantvars |> dplyr::filter(Feature %in% protein_names) |> nrow())` proteins as variables of importance. These are described / visualized in @tbl-fa-E1-LASSO and @fig-fa-E1-LASSO below.
+-   From the N=`r PWAS_res |> dplyr::filter(fa_1_fdr < .05 )|> nrow()` exam 1 proteins significantly associated with FA at an FDR corrected `P<.05`, the LASSO identified N=`r (FA_E1_LASSO_importantvars |> dplyr::filter(Feature %in% protein_names) |> nrow())` proteins as variables of importance. These are described / visualized in @tbl-fa-E1-LASSO and @fig-fa-E1-LASSO below.
 
 ::: landscape
 ```{r}
-
 #| label: tbl-fa-E1-LASSO
 #| tbl-cap: Associations Between Exam 1 Proteins and Fractional Anisotropy Reaching an FDR-corrected P<.05 and Selected by LASSO as Variables of Importance
 
@@ -739,29 +814,31 @@ rm(full_res)
 ```
 :::
 
+### 
+
 ### Microbleeds (MB)
 
 #### Model Specification
 
 -   The associations between MB and proteins were analyzed via logistic regression (MB coded as 'present' vs. 'absent' as above)
--   For MB the numeric covariates included `{r} print(mb_numeric_covs)`. ^2^
--   For MB the factor covariates included `{r} print(mb_factor_covs)`. ^2^
+-   For MB the numeric covariates included `r (mb_numeric_covs)`. ^2^
+-   For MB the factor covariates included `r (mb_factor_covs)`. ^2^
 
 #### MB: Exam 6 proteins
 
--   The E6 proteins `->` E6 MRI for MB included data from N= `{r} print(max(PWAS_res$mb_present_6_nobs, na.rm=TRUE))` participants.
+-   The E6 proteins `->` E6 MRI for MB included data from N= `r (max(PWAS_res$mb_present_6_nobs, na.rm=TRUE))` participants.
 
 -   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/MB_E6_PWAS.csv)
 
--   A total of N=`{r} PWAS_res |> dplyr::filter(mb_present_6_fdr < .05 )|> nrow()` exam 6 proteins were significantly associated with MB at an FDR corrected `P<.05`.
+-   A total of N=`r PWAS_res |> dplyr::filter(mb_present_6_fdr < .05 )|> nrow()` exam 6 proteins were significantly associated with MB at an FDR corrected `P<.05`.
 
 #### MB: Exam 1 proteins
 
--   The E1 proteins `->` E6 MRI for FA included data from N=`{r} print(max(PWAS_res$mb_present_1_nobs, na.rm=TRUE))` participants.
+-   The E1 proteins `->` E6 MRI for FA included data from N=`r (max(PWAS_res$mb_present_1_nobs, na.rm=TRUE))` participants.
 
 -   Full results can be found [here](https://github.com/LekkiWood/MESA-MIND-Single-Time-Point-Proteins-SVD/blob/main/outputs/MB_E1_PWAS.csv)
 
--   A total of N=`{r} PWAS_res |> dplyr::filter(mb_present_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with MB at an FDR correct `P<.05`.
+-   A total of N=`r PWAS_res |> dplyr::filter(mb_present_1_fdr < .05 )|> nrow()` exam 1 proteins were significantly associated with MB at an FDR correct `P<.05`.
 
 \newpage
 
@@ -801,7 +878,9 @@ gt_table
 #knitr::kable(table(gt_table), format="latex")
 
 ```
+:::
 
+::: landscape
 ```{r}
 #| label: fig-fa-E1
 #| fig-cap: Associations Between Exam 1 Proteins and Fractional Anisotropy
@@ -868,4 +947,3 @@ if (requireNamespace("sessioninfo", quietly = TRUE)) {
   sessionInfo()
 }
 ```
-

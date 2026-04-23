@@ -19,7 +19,8 @@ cross_sectional_PWAS_function <- function(cleaned_proteins, protein_mapping,
   # subset once (faster + avoids repeated subset() inside loop)
   dat <- PWAS_file |> 
     dplyr::filter(Exam == chosen_exam) |> 
-    droplevels()
+    droplevels() |>
+    dplyr::mutate(Batch = droplevels(Batch))
   
   # storage
   nvar <- length(proteins)
@@ -37,7 +38,7 @@ cross_sectional_PWAS_function <- function(cleaned_proteins, protein_mapping,
     rhs_terms <- c(
       paste0("scale(", predictor, ")"),
       paste0("scale(", numeric_covariates, ")"),
-      factor_covariates
+      paste0("as.factor(", factor_covariates, ")")
     )
     
     fml <- stats::as.formula(
